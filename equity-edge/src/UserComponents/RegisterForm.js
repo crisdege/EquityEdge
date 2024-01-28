@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 
-const RegisterForm = ({ onRegister }) => {
+const RegisterForm = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
     email: '',
     password: '',
   });
+
+ const onRegister = () => {
+
+ }
 
   const handleChange = (e) => {
     const { name, value } = e.target;

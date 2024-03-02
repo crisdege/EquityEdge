@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { TextField, Button } from "@mui/material";
 
-const RegisterForm = () => {
+const RegisterForm = ({ onRegister }) => {
   const [formData, setFormData] = useState({
-    fullName: '',
-    username: '',
-    email: '',
-    password: '',
+    fullName: "",
+    username: "",
+    email: "",
+    password: "",
   });
-
- const onRegister = () => {
-
- }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,47 +22,49 @@ const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Full Name:
-        <input
-          type="text"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <label>
-        Username:
-        <input
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <label>
-        Email:
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <label>
-        Password:
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <button type="submit">Register</button>
+      <TextField
+        label="Full Name"
+        type="text"
+        name="fullName"
+        value={formData.fullName}
+        onChange={handleChange}
+        required
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Username"
+        type="text"
+        name="username"
+        value={formData.username}
+        onChange={handleChange}
+        required
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Email"
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Password"
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        required
+        fullWidth
+        margin="normal"
+      />
+      <Button type="submit" variant="contained" color="primary">
+        Register
+      </Button>
     </form>
   );
 };

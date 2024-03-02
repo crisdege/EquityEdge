@@ -1,7 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Typography, Paper, Tabs, Tab, List, ListItem, ListItemText, Button, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; 
-import logo from '../Images/Logo.png'
+import React, { useEffect, useState } from "react";
+import {
+  Typography,
+  Paper,
+  Tabs,
+  Tab,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  Box,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import logo from "../Images/Logo.png";
 
 const Dashboard = ({ userId, userFullName }) => {
   const [portfolio, setPortfolio] = useState([]);
@@ -13,16 +23,16 @@ const Dashboard = ({ userId, userFullName }) => {
   useEffect(() => {
     // Simulated data for stocks
     const fakeStocks = [
-      { symbol: 'AAPL', quantity: 10 },
-      { symbol: 'GOOGL', quantity: 5 },
-      { symbol: 'MSFT', quantity: 8 },
+      { symbol: "AAPL", quantity: 10 },
+      { symbol: "GOOGL", quantity: 5 },
+      { symbol: "MSFT", quantity: 8 },
     ];
 
     // Simulated data for transaction history
     const fakeTransactions = [
-      { id: 1, type: 'BUY', symbol: 'AAPL', quantity: 5, price: 150 },
-      { id: 2, type: 'SELL', symbol: 'GOOGL', quantity: 2, price: 2000 },
-      { id: 3, type: 'BUY', symbol: 'MSFT', quantity: 3, price: 180 },
+      { id: 1, type: "BUY", symbol: "AAPL", quantity: 5, price: 150 },
+      { id: 2, type: "SELL", symbol: "GOOGL", quantity: 2, price: 2000 },
+      { id: 3, type: "BUY", symbol: "MSFT", quantity: 3, price: 180 },
     ];
 
     // Set fake data to state
@@ -37,32 +47,27 @@ const Dashboard = ({ userId, userFullName }) => {
   const handleLogout = () => {
     // Implement logout logic here (e.g., clear user session, etc.)
     // After logout, navigate to the authentication page
-    navigate('/');
+    navigate("/");
   };
 
+  console.log(selectedTab);
   return (
     <div>
-       
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-      <img src={logo} alt="Logo" style={{ height: '150px', marginRight: '10px' }} />
-        <Typography variant="h4">
-          Welcome {userFullName}
-        </Typography>
-        <Typography variant="subtitle1" onClick={handleLogout} style={{ textDecoration: 'underline', cursor: 'pointer', display: 'flex' }}>
-          <Box marginRight={2}>Add/Withdraw Cash</Box>
-          <Box marginRight={2}>Sell Stocks</Box>
-          <Box marginRight={2}>Buy Stocks</Box>
-          <Box>Log Out</Box>
-        </Typography>
-      </Box>
-
-      <Paper elevation={3} style={{ marginBottom: '16px' }}>
-        <Tabs value={selectedTab} onChange={handleChangeTab} centered>
-          <Tab label="Portfolio" />
-          <Tab label="Cash Balance" />
-          <Tab label="Transaction History" />
-        </Tabs>
-        <div style={{ padding: '16px' }}>
+      <Paper elevation={3} style={{ marginBottom: "16px" }}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+        >
+          <Typography variant="h4">Welcome {userFullName}</Typography>
+          <Tabs value={selectedTab} onChange={handleChangeTab} centered>
+            <Tab label="Portfolio" />
+            <Tab label="Cash Balance" />
+            <Tab label="Transaction History" />
+          </Tabs>
+        </Box>
+        <div style={{ padding: "16px" }}>
           {selectedTab === 0 && (
             <div>
               <Typography variant="h6" gutterBottom>
@@ -71,7 +76,9 @@ const Dashboard = ({ userId, userFullName }) => {
               <List>
                 {portfolio.map((stock) => (
                   <ListItem key={stock.symbol}>
-                    <ListItemText primary={`${stock.symbol} - ${stock.quantity} shares`} />
+                    <ListItemText
+                      primary={`${stock.symbol} - ${stock.quantity} shares`}
+                    />
                   </ListItem>
                 ))}
               </List>
@@ -94,7 +101,7 @@ const Dashboard = ({ userId, userFullName }) => {
                 {transactionHistory.map((transaction) => (
                   <ListItem key={transaction.id}>
                     <ListItemText
-                      primary={`${transaction.type === 'BUY' ? 'Bought' : 'Sold'} ${transaction.quantity} shares of ${transaction.symbol} for $${transaction.price} each`}
+                      primary={`${transaction.type === "BUY" ? "Bought" : "Sold"} ${transaction.quantity} shares of ${transaction.symbol} for $${transaction.price} each`}
                     />
                   </ListItem>
                 ))}
@@ -103,8 +110,6 @@ const Dashboard = ({ userId, userFullName }) => {
           )}
         </div>
       </Paper>
-
-      
     </div>
   );
 };

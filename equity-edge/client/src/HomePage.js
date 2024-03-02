@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import RegisterForm from './UserComponents/RegisterForm';
-import LoginForm from './UserComponents/LoginForm';
+import React, { useState } from "react";
+import RegisterForm from "./UserComponents/RegisterForm";
+import LoginForm from "./UserComponents/LoginForm";
 
 const AuthPage = () => {
   const [showRegisterForm, setShowRegisterForm] = useState(false);
@@ -28,19 +28,20 @@ const AuthPage = () => {
 
   return (
     <div>
-      
-        <div>
-          <p>Register or login to access the stock trading system.</p>
-          <button onClick={handleRegisterClick}>Register</button>
-          <button onClick={handleLoginClick}>Login</button>
-        </div>
-      
+      <div>
+        <p>Register or login to access the stock trading system.</p>
+        <button onClick={handleRegisterClick}>Register</button>
+        <button onClick={handleLoginClick}>Login</button>
+      </div>
 
       {showRegisterForm && (
         <div>
           <h2>Register</h2>
           <RegisterForm />
-          <p>Already have an account? <button onClick={handleGoToLoginClick}>Go to Login</button></p>
+          <p>
+            Already have an account?{" "}
+            <button onClick={handleGoToLoginClick}>Go to Login</button>
+          </p>
         </div>
       )}
 
@@ -48,7 +49,10 @@ const AuthPage = () => {
         <div>
           <h2>Login</h2>
           <LoginForm />
-          <p>Don't have an account? <button onClick={handleGoToRegisterClick}>Go to Register</button></p>
+          <p>
+            Don't have an account?{" "}
+            <button onClick={handleGoToRegisterClick}>Go to Register</button>
+          </p>
         </div>
       )}
     </div>

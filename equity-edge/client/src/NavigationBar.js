@@ -22,6 +22,7 @@ import Logo from "./Images/Logo.png";
 import { useNavigate } from "react-router-dom";
 
 import CustomDialog from "./UserComponents/CustomDialog";
+import StockMarket from "./UserComponents/StockMarket";
 
 const NavigationBar = ({ isLoggedIn, onLogout, userID, userFullName }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -39,6 +40,10 @@ const NavigationBar = ({ isLoggedIn, onLogout, userID, userFullName }) => {
     setDialogTitle("Login");
     setDialogContent(<LoginForm onClose={() => setOpenDialog(false)} />);
     setOpenDialog(true);
+  };
+
+  const handleStockMarketClick = () => {
+    navigate("/trade-stocks");
   };
 
   const handleLogout = () => {
@@ -74,8 +79,13 @@ const NavigationBar = ({ isLoggedIn, onLogout, userID, userFullName }) => {
                 }}
               >
                 <Box marginRight={2}>Add/Withdraw Cash</Box>
-                <Box marginRight={2}>Sell Stocks</Box>
-                <Box marginRight={2}>Buy Stocks</Box>
+                <Button
+                  color="inherit"
+                  onClick={handleStockMarketClick}
+                  sx={{ color: "black" }}
+                >
+                  Buy Stocks
+                </Button>
                 <Box
                   marginRight={2}
                   onClick={handleLogout}

@@ -131,6 +131,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import logo from "../Images/Logo.png";
 import StockMarket from "./StockMarket"; // Import StockMarket component
+import Portfolio from "./Portfolio";
 
 const Dashboard = ({ userId, userFullName }) => {
   const [portfolio, setPortfolio] = useState([]);
@@ -138,14 +139,31 @@ const Dashboard = ({ userId, userFullName }) => {
   const [transactionHistory, setTransactionHistory] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
   const navigate = useNavigate();
+  const [ownedStocks, setOwnedStocks] = useState({}); // Initialize ownedStocks as an empty object
+  const fakeStocks = [
+    { ticker: "AAPL", name: "Apple Inc.", price: 150, quantity: 10 },
+    {
+      ticker: "MSFT",
+      name: "Microsoft Corporation",
+      price: 200,
+      quantity: 50,
+    },
+    { ticker: "GOOGL", name: "Alphabet Inc.", price: 250, quantity: 15 },
+  ];
+  const sellStock = (symbol) => {
+    // Implement logic to sell stocks
+    // Update the ownedStocks state accordingly
+    // For example:
+    const updatedOwnedStocks = { ...ownedStocks };
+    // Implement logic to decrement the number of shares the user owns for the specified stock symbol
+    updatedOwnedStocks[symbol] -= 1;
+    setOwnedStocks(updatedOwnedStocks);
+  };
 
   useEffect(() => {
     // Simulated data for stocks
-    const fakeStocks = [
-      { symbol: "AAPL", quantity: 10 },
-      { symbol: "GOOGL", quantity: 5 },
-      { symbol: "MSFT", quantity: 8 },
-    ];
+
+    setOwnedStocks(fakeStocks);
 
     // Simulated data for transaction history
     const fakeTransactions = [
@@ -181,29 +199,32 @@ const Dashboard = ({ userId, userFullName }) => {
           <Typography variant="h4">Welcome {userFullName}</Typography>
           <Tabs value={selectedTab} onChange={handleChangeTab} centered>
             <Tab label="Portfolio" />
-            <Tab label="Trade Stocks" />
+            <Tab label="Buy Stocks" />
             <Tab label="Cash Balance" />
             <Tab label="Transaction History" />
           </Tabs>
         </Box>
         <div style={{ padding: "16px" }}>
           {selectedTab === 0 && (
-            <div>
-              <Typography variant="h6" gutterBottom>
-                Portfolio
-              </Typography>
-              <List>
-                {portfolio.map((stock) => (
-                  <ListItem key={stock.symbol}>
-                    <ListItemText
-                      primary={`${stock.symbol} - ${stock.quantity} shares`}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </div>
+            <Portfolio ownedStocks={fakeStocks} />
+            // <div>
+            //   <Typography variant="h6" gutterBottom>
+            //     Portfolio
+            //   </Typography>
+            //   <List>
+            //     {portfolio.map((stock) => (
+            //       <ListItem key={stock.ticker}>
+            //         <ListItemText
+            //           primary={`${stock.name} - ${stock.quantity} shares`}
+            //         />
+            //       </ListItem>
+            //     ))}
+            //   </List>
+            // </div>
           )}
-          {selectedTab === 1 && <StockMarket />}{" "}
+          {selectedTab === 1 && (
+            <StockMarket ownedStocks={ownedStocks} sellStock={sellStock} />
+          )}{" "}
           {/* Render StockMarket component when "Trade Stocks" tab is selected */}
           {selectedTab === 2 && (
             <div>

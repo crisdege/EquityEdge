@@ -132,6 +132,8 @@ import { useNavigate } from "react-router-dom";
 import logo from "../Images/Logo.png";
 import StockMarket from "./StockMarket"; // Import StockMarket component
 import Portfolio from "./Portfolio";
+import CashManagement from "./CashManagement";
+import TransactionHistory from "./TransactionHistory";
 
 const Dashboard = ({ userId, userFullName }) => {
   const [portfolio, setPortfolio] = useState([]);
@@ -205,50 +207,36 @@ const Dashboard = ({ userId, userFullName }) => {
           </Tabs>
         </Box>
         <div style={{ padding: "16px" }}>
-          {selectedTab === 0 && (
-            <Portfolio ownedStocks={fakeStocks} />
-            // <div>
-            //   <Typography variant="h6" gutterBottom>
-            //     Portfolio
-            //   </Typography>
-            //   <List>
-            //     {portfolio.map((stock) => (
-            //       <ListItem key={stock.ticker}>
-            //         <ListItemText
-            //           primary={`${stock.name} - ${stock.quantity} shares`}
-            //         />
-            //       </ListItem>
-            //     ))}
-            //   </List>
-            // </div>
-          )}
+          {selectedTab === 0 && <Portfolio ownedStocks={fakeStocks} />}
           {selectedTab === 1 && (
             <StockMarket ownedStocks={ownedStocks} sellStock={sellStock} />
           )}{" "}
           {/* Render StockMarket component when "Trade Stocks" tab is selected */}
           {selectedTab === 2 && (
-            <div>
-              <Typography variant="h6" gutterBottom>
-                Cash Balance
-              </Typography>
-              <Typography>${cashBalance}</Typography>
-            </div>
+            <CashManagement />
+            // <div>
+            //   <Typography variant="h6" gutterBottom>
+            //     Cash Balance
+            //   </Typography>
+            //   <Typography>${cashBalance}</Typography>
+            // </div>
           )}
           {selectedTab === 3 && (
-            <div>
-              <Typography variant="h6" gutterBottom>
-                Transaction History
-              </Typography>
-              <List>
-                {transactionHistory.map((transaction) => (
-                  <ListItem key={transaction.id}>
-                    <ListItemText
-                      primary={`${transaction.type === "BUY" ? "Bought" : "Sold"} ${transaction.quantity} shares of ${transaction.symbol} for $${transaction.price} each`}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </div>
+            <TransactionHistory />
+            // <div>
+            //   <Typography variant="h6" gutterBottom>
+            //     Transaction History
+            //   </Typography>
+            //   <List>
+            //     {transactionHistory.map((transaction) => (
+            //       <ListItem key={transaction.id}>
+            //         <ListItemText
+            //           primary={`${transaction.type === "BUY" ? "Bought" : "Sold"} ${transaction.quantity} shares of ${transaction.symbol} for $${transaction.price} each`}
+            //         />
+            //       </ListItem>
+            //     ))}
+            //   </List>
+            // </div>
           )}
         </div>
       </Paper>

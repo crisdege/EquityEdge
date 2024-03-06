@@ -9,12 +9,19 @@ import {
   IconButton,
   AppBar,
   Toolbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Box,
+  Grid,
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-import BuyStockDialog from "./BuyStockDialog";
+import CartDialog from "./CartDialog";
 
 const availableStocks = [
   { ticker: "AAPL", name: "Apple Inc." },
@@ -58,8 +65,11 @@ const generateRandomStockPrice = (
 
 const StockMarket = () => {
   const [cartItems, setCartItems] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openCartDialog, setOpenCartDialog] = useState(false);
+  const [openBuyDialog, setOpenBuyDialog] = useState(false);
   const [stockPrices, setStockPrices] = useState({});
+  const [selectedStock, setSelectedStock] = useState(null);
+  const [buyQuantity, setBuyQuantity] = useState(0);
 
   useEffect(() => {
     // Generate random prices for each stock
@@ -95,7 +105,19 @@ const StockMarket = () => {
   };
 
   const addToCart = (stock) => {
-    setCartItems([...cartItems, stock]);
+    const stockWithPrice = {
+      ...stock,
+      price: (generateFakeData()[stock.ticker]?.price || 0).toFixed(2), // Add price information formatted to 2 decimal places
+    };
+    setSelectedStock(stockWithPrice);
+    setOpenBuyDialog(true);
+  };
+
+  const handleAddToCart = () => {
+    setCartItems([...cartItems, { ...selectedStock, quantity: buyQuantity }]);
+    setOpenBuyDialog(false);
+    setBuyQuantity(0);
+    setSelectedStock(null);
   };
 
   const removeFromCart = (index) => {
@@ -116,8 +138,8 @@ const StockMarket = () => {
       const marketCap = initialPrice * volume;
       const openingPrice = initialPrice;
       const stockPrice = stockPrices[stock.ticker];
-      const high = stockPrice ? Math.max(...stockPrice) : 0;
-      const low = stockPrice ? Math.min(...stockPrice) : 0;
+      const high = stockPrice ? Math.max(...stockPrice).toFixed(2) : 0;
+      const low = stockPrice ? Math.min(...stockPrice).toFixed(2) : 0;
 
       fakeData[stock.ticker] = {
         price: stockPrice ? stockPrice[0] : 0,
@@ -135,64 +157,104 @@ const StockMarket = () => {
     <div>
       <AppBar position="static">
         <Toolbar sx={{ backgroundColor: "white", color: "black" }}>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, color: "black" }}
-          >
+          <Typography variant="h6" sx={{ flexGrow: 1, color: "black" }}>
             Stock Market
           </Typography>
-          <IconButton color="inherit" onClick={() => setOpenDialog(true)}>
+          <IconButton
+            color="inherit"
+            onClick={() => setOpenCartDialog(true)}
+            sx={{ mr: 2 }}
+          >
             <Badge badgeContent={cartItems.length} color="error">
               <AddShoppingCartIcon />
             </Badge>
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Typography variant="h4" gutterBottom>
-        Available Stocks
-      </Typography>
-      <List>
-        {availableStocks.map((stock) => (
-          <div key={stock.ticker}>
-            <ListItem>
-              {/* <ListItemText
-                primary={`${stock.name} (${stock.ticker})`}
-                secondary={`Price: ${stockPrices[stock.ticker]?.[0] || 0}`}
-              /> */}
-              <ListItemText
-                primary={`${stock.name} (${stock.ticker}) - Price: ${generateFakeData()[stock.ticker]?.price}, Volume: ${generateFakeData()[stock.ticker]?.volume}, Market Cap: ${generateFakeData()[stock.ticker]?.marketCap}`}
-                secondary={`Open: ${generateFakeData()[stock.ticker]?.openingPrice}, High: ${generateFakeData()[stock.ticker]?.high}, Low: ${generateFakeData()[stock.ticker]?.low}`}
-              />
-              <Button variant="contained" onClick={() => addToCart(stock)}>
-                Add to Cart
-              </Button>
-            </ListItem>
-            <HighchartsReact
-              key={stock.ticker}
-              highcharts={Highcharts}
-              options={{
-                title: {
-                  text: `${stock.name} (${stock.ticker}) Stock Price`,
-                },
-                series: [
-                  {
-                    name: "Stock Price",
-                    data: generateStockChartData(stock.ticker),
-                  },
-                ],
-              }}
-            />
-          </div>
-        ))}
-      </List>
-      <BuyStockDialog
-        open={openDialog}
-        handleClose={() => setOpenDialog(false)}
+      <Box p={2}>
+        <Typography variant="h4" gutterBottom>
+          Available Stocks
+        </Typography>
+        <Grid container spacing={2}>
+          {availableStocks.map((stock) => (
+            <Grid item xs={12} md={6} lg={4} key={stock.ticker}>
+              <Box
+                boxShadow={1}
+                p={2}
+                bgcolor="background.paper"
+                borderRadius={2}
+              >
+                <Typography variant="h6" gutterBottom>
+                  {stock.name} ({stock.ticker})
+                </Typography>
+                <Typography gutterBottom>
+                  Price: {generateFakeData()[stock.ticker]?.price}, Volume:{" "}
+                  {generateFakeData()[stock.ticker]?.volume}, Market Cap:{" "}
+                  {generateFakeData()[stock.ticker]?.marketCap}
+                </Typography>
+                <Typography gutterBottom>
+                  Open: {generateFakeData()[stock.ticker]?.openingPrice}, High:{" "}
+                  {generateFakeData()[stock.ticker]?.high}, Low:{" "}
+                  {generateFakeData()[stock.ticker]?.low}
+                </Typography>
+                <Button
+                  variant="contained"
+                  onClick={() => addToCart(stock)}
+                  sx={{ mt: 1 }}
+                >
+                  Add to Cart
+                </Button>
+                <HighchartsReact
+                  key={stock.ticker}
+                  highcharts={Highcharts}
+                  options={{
+                    title: {
+                      text: `${stock.name} (${stock.ticker}) Stock Price`,
+                    },
+                    series: [
+                      {
+                        name: "Stock Price",
+                        data: generateStockChartData(stock.ticker),
+                      },
+                    ],
+                  }}
+                />
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+      <CartDialog
+        open={openCartDialog}
+        handleClose={() => setOpenCartDialog(false)}
         cartItems={cartItems}
         removeFromCart={removeFromCart}
         clearCart={clearCart}
       />
+      <Dialog
+        open={openBuyDialog}
+        onClose={() => setOpenBuyDialog(false)}
+        fullWidth={true}
+        maxWidth="xs"
+      >
+        <DialogTitle style={{ fontSize: "1.2rem", marginBottom: "1rem" }}>
+          Buy Stocks
+        </DialogTitle>
+        <DialogContent sx={{ paddingTop: "24px", paddingBottom: "24px" }}>
+          <TextField
+            label="Quantity"
+            type="number"
+            value={buyQuantity}
+            onChange={(e) => setBuyQuantity(e.target.value)}
+            fullWidth
+            style={{ margin: "8px 0" }} // Adjusted margin
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenBuyDialog(false)}>Cancel</Button>
+          <Button onClick={handleAddToCart}>Add to cart</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

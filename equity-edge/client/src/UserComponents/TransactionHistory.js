@@ -6,6 +6,10 @@ import {
   ListItemText,
   Button,
   Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { styled } from "@mui/system";
 
@@ -49,6 +53,9 @@ const TransactionHistory = () => {
     },
   ]);
 
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [selectedTransactionId, setSelectedTransactionId] = useState(null);
+
   // Function to add a transaction to the list
   const addTransaction = (transaction) => {
     setTransactions([...transactions, transaction]);
@@ -56,10 +63,26 @@ const TransactionHistory = () => {
 
   // Function to cancel a pending stock purchase
   const cancelPurchase = (id) => {
+    setSelectedTransactionId(id);
+    setCancelDialogOpen(true);
+  };
+
+  // Function to confirm canceling a transaction
+  const confirmCancel = () => {
     // Implement logic to cancel the purchase
     // For example, remove the transaction with the specified id from the list
-    const updatedTransactions = transactions.filter((t) => t.id !== id);
+    const updatedTransactions = transactions.filter(
+      (t) => t.id !== selectedTransactionId
+    );
     setTransactions(updatedTransactions);
+    setCancelDialogOpen(false);
+    setSelectedTransactionId(null);
+  };
+
+  // Function to cancel the cancelation of the transaction
+  const cancelCancel = () => {
+    setCancelDialogOpen(false);
+    setSelectedTransactionId(null);
   };
 
   return (
@@ -98,6 +121,18 @@ const TransactionHistory = () => {
           </StyledPaper>
         ))}
       </List>
+      <Dialog open={cancelDialogOpen} onClose={cancelCancel}>
+        <DialogTitle>Confirm Cancel</DialogTitle>
+        <DialogContent>
+          Are you sure you want to cancel this transaction?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelCancel}>No</Button>
+          <Button onClick={confirmCancel} color="secondary">
+            Yes, Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

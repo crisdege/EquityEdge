@@ -33,7 +33,6 @@ const App = () => {
             )
           }
         />
-        <Route path="/trade-stocks" element={<StockMarket />} />
       </Routes>
     </Router>
   );

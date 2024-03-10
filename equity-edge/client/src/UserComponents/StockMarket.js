@@ -112,7 +112,7 @@ const StockMarket = () => {
     setSelectedStock(stockWithPrice);
     setOpenBuyDialog(true);
   };
-
+  // TODO: another one here
   const handleAddToCart = () => {
     setCartItems([...cartItems, { ...selectedStock, quantity: buyQuantity }]);
     setOpenBuyDialog(false);

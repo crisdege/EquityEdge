@@ -10,7 +10,7 @@ const NavigationBar = ({ isLoggedIn, onLogout, userID, userFullName }) => {
   const handleLogout = () => {
     navigate("/");
   };
-
+  // TODO: sample to do here
   return (
     <AppBar position="static" sx={{ backgroundColor: "#FFF8F3", height: 64 }}>
       <Toolbar>

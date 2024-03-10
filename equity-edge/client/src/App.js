@@ -17,7 +17,7 @@ const App = () => {
   const userFullName = "Cristina Dege";
   const isAdmin = true;
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogout = () => {
     // Perform logout actions

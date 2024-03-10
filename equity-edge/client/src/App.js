@@ -12,7 +12,7 @@ const App = () => {
   // const userId = null;
   // const userFullName = null;
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogout = () => {
     // Perform logout actions

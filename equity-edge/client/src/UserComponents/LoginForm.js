@@ -12,7 +12,7 @@ const LoginForm = ({ onLogin }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  //TODO: code for sending info to back end goes here
+  //TODO: Perry code for sending info to back end goes here
   const handleSubmit = (e) => {
     e.preventDefault();
     // Send login data to backend API

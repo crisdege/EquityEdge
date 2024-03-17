@@ -14,10 +14,27 @@ const RegisterForm = ({ onRegister }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  //TODO: Perry this is where you need to look at sending user info to back end
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Send registration data to backend API
-    onRegister(formData);
+    try {
+      const response = await fetch("/api/user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        onRegister(data);
+      } else {
+        alert(data.message); // Display error message if registration fails
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error
+    }
   };
 
   return (

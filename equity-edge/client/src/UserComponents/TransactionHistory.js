@@ -61,9 +61,10 @@ const TransactionHistory = () => {
     setTransactions([...transactions, transaction]);
   };
 
-  // Function to cancel a pending stock purchase
+  // TODO: Sean Function to cancel a pending stock purchase
   const cancelPurchase = (id) => {
     setSelectedTransactionId(id);
+    // will also need to send this to the back end to delete from database
     setCancelDialogOpen(true);
   };
 

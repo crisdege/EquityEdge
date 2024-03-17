@@ -24,7 +24,7 @@ const CashManagement = () => {
   const [transferFrom, setTransferFrom] = useState(null); // Transfer from account
   const [transferTo, setTransferTo] = useState(null); // Transfer to account
 
-  // Function to handle transferring funds
+  // TODO: Perry Function to handle transferring funds
   const handleTransfer = () => {
     if (transactionAmount > 0 && transferFrom && transferTo) {
       // Implement transfer logic

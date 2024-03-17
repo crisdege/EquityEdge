@@ -14,6 +14,7 @@ const RegisterForm = ({ onRegister }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  //TODO: Perry this is where you need to look at sending user info to back end
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

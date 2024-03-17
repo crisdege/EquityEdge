@@ -10,12 +10,12 @@ const App = () => {
   // For demonstration purposes, assuming the user is authenticated and userId is known
   // const userId = "123";
   // const userFullName = "Cristina Dege";
-  // const isAdmin = false;
+  const isAdmin = false;
   // const userId = null;
   // const userFullName = null;
   const userId = "123";
   const userFullName = "Cristina Dege";
-  const isAdmin = true;
+  // const isAdmin = true;
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 

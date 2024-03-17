@@ -25,7 +25,7 @@ const CartDialog = ({ open, handleClose, cartItems, removeFromCart }) => {
   };
 
   const handleBuy = () => {
-    // this is where the code to add the stocks to the database will go
+    // TODO: Sean this is where the code to add the stocks to the database will go
   };
 
   const { itemsWithTotalPrice, grandTotal } = calculateTotalPrice();

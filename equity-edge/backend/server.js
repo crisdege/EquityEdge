@@ -1,9 +1,10 @@
 const express = require("express");
-const { db } = require("./eedb.js"); 
+const cors = require("cors");
+const { db } = require("./eedb.js");
 const { registerUser, getAllUsers } = require("./userController");
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -21,4 +22,3 @@ db.once("open", () => {
     console.log(`Server is running on port ${PORT}`);
   });
 });
-

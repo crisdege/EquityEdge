@@ -7,7 +7,6 @@ const RegisterForm = ({ onRegister }) => {
     username: "",
     email: "",
     password: "",
-    isAdmin: false,
   });
 
   const handleChange = (e) => {

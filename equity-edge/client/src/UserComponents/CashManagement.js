@@ -24,10 +24,16 @@ const CashManagement = () => {
   const [transferFrom, setTransferFrom] = useState(null); // Transfer from account
   const [transferTo, setTransferTo] = useState(null); // Transfer to account
 
-  // TODO: Perry Function to handle transferring funds
+  // TODO: Function was added
   const handleTransfer = () => {
     if (transactionAmount > 0 && transferFrom && transferTo) {
-      // Implement transfer logic
+      const updatedCashBalance = cashBalance - transactionAmount;
+      const newCashBalance = updatedCashBalance + transactionAmount;
+      
+      setCashBalance(newCashBalance);
+      setTransactionAmount(0);
+      setTransferFrom(null);
+      setTransferTo(null);
       console.log("Transfer initiated");
     }
   };

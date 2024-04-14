@@ -12,11 +12,29 @@ const LoginForm = ({ onLogin }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  //TODO: code for sending info to back end goes here
-  const handleSubmit = (e) => {
+  //TODO: code added
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Send login data to backend API
-    onLogin(formData);
+
+    try {
+      const response = await fetch('/api/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || 'Login failed');
+      }
+
+      const { token } = await response.json();
+      onLogin(token);
+    } catch (error) {
+      console.error('Login failed:', error.message);
+    }
   };
 
   return (

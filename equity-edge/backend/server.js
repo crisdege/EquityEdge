@@ -1,5 +1,5 @@
 const express = require("express");
-const { db, User } = require("./eedb.js"); 
+const { db, User } = require("./eedb.js");
 const { registerUser } = require("./userController");
 
 const app = express();
@@ -19,4 +19,4 @@ db.once("open", () => {
     console.log(`Server is running on port ${PORT}`);
   });
 });
-
+f;

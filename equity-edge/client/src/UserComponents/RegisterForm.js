@@ -7,6 +7,7 @@ const RegisterForm = ({ onRegister }) => {
     username: "",
     email: "",
     password: "",
+    isAdmin: false,
   });
 
   const handleChange = (e) => {
@@ -14,11 +15,10 @@ const RegisterForm = ({ onRegister }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  //TODO: Perry this is where you need to look at sending user info to back end
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/user/register", {
+      const response = await fetch("/api/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

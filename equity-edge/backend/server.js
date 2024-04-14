@@ -1,6 +1,6 @@
 const express = require("express");
-const { db, User } = require("./eedb.js"); 
-const { registerUser } = require("./userController");
+const { db } = require("./eedb.js"); 
+const { registerUser, getAllUsers } = require("./userController");
 
 const app = express();
 
@@ -12,6 +12,8 @@ app.get("/", (req, res) => {
 
 app.post("/api/user", registerUser);
 
+app.get("/api/users", getAllUsers);
+
 const PORT = process.env.PORT || 3001;
 
 db.once("open", () => {
@@ -19,4 +21,3 @@ db.once("open", () => {
     console.log(`Server is running on port ${PORT}`);
   });
 });
-

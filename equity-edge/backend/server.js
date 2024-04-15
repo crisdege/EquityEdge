@@ -1,10 +1,9 @@
 const express = require("express");
-const cors = require("cors");
-const { db } = require("./eedb.js");
-const { registerUser, getAllUsers } = require("./userController");
+const { db } = require("./eedb.js"); 
+const { registerUser, getAllUsers, getUserByUsername, checkPassword } = require("./userController");
 
 const app = express();
-app.use(cors());
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -14,6 +13,10 @@ app.get("/", (req, res) => {
 app.post("/api/user", registerUser);
 
 app.get("/api/users", getAllUsers);
+
+app.get("/api/user/:username", getUserByUsername);
+
+app.post("/api/user/checkpassword", checkPassword);
 
 const PORT = process.env.PORT || 3001;
 

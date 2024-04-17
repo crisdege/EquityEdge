@@ -26,7 +26,8 @@ const RegisterForm = ({ onRegister }) => {
       });
       const data = await response.json();
       if (response.ok) {
-        onRegister(data);
+        // onRegister(data);
+        onRegister(formData.username, formData.password);
       } else {
         alert(data.message); // Display error message if registration fails
       }

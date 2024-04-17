@@ -1,6 +1,12 @@
 const express = require("express");
-const { db } = require("./eedb.js"); 
-const { registerUser, getAllUsers, getUserByUsername, checkPassword } = require("./userController");
+const { db } = require("./eedb.js");
+const {
+  registerUser,
+  getAllUsers,
+  getUserByUsername,
+  checkPassword,
+  loginUser,
+} = require("./userController");
 
 const app = express();
 
@@ -17,6 +23,8 @@ app.get("/api/users", getAllUsers);
 app.get("/api/user/:username", getUserByUsername);
 
 app.post("/api/user/checkpassword", checkPassword);
+
+app.post("/api/user/login", loginUser);
 
 const PORT = process.env.PORT || 3001;
 

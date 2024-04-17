@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 
-const LoginForm = ({ onLogin }) => {
+const LoginForm = ({ onLogin, history }) => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -12,28 +12,32 @@ const LoginForm = ({ onLogin }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  //TODO: code added
+  // LoginForm.js
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('/api/user/login', {
-        method: 'POST',
+      const response = await fetch("/api/user/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
         const errorMessage = await response.text();
-        throw new Error(errorMessage || 'Login failed');
+        throw new Error(errorMessage || "Login failed");
       }
 
-      const { token } = await response.json();
-      onLogin(token);
+      const { token, user } = await response.json();
+      // Pass token to parent component
+      onLogin(token, user);
+      console.log(user);
+      // Redirect to the dashboard page
+      history.push("/dashboard"); // Assuming '/dashboard' is the desired route after login
     } catch (error) {
-      console.error('Login failed:', error.message);
+      console.error("Login failed:", error.message);
     }
   };
 

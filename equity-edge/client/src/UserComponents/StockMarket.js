@@ -3,9 +3,6 @@ import {
   Typography,
   Button,
   Badge,
-  List,
-  ListItem,
-  ListItemText,
   IconButton,
   AppBar,
   Toolbar,
@@ -70,6 +67,7 @@ const StockMarket = () => {
   const [stockPrices, setStockPrices] = useState({});
   const [selectedStock, setSelectedStock] = useState(null);
   const [buyQuantity, setBuyQuantity] = useState(0);
+  const [availableStocks, setAvailableStocks] = useState([]);
 
   useEffect(() => {
     // Generate random prices for each stock
@@ -80,7 +78,7 @@ const StockMarket = () => {
         const volatility = Math.random() * 0.1 + 0.05; // Random volatility between 0.05 and 0.15
         const maxFluctuation = Math.floor(Math.random() * 10) + 1; // Random max fluctuation between 1 and 10
         const steps = 100; // Number of steps throughout the day
-        prices[stock.ticker] = generateRandomStockPrice(
+        prices[stock.stockTicker] = generateRandomStockPrice(
           initialPrice,
           volatility,
           maxFluctuation,
@@ -90,12 +88,27 @@ const StockMarket = () => {
       setStockPrices(prices);
     };
 
+    const fetchStocks = async () => {
+      try {
+        const response = await fetch("/api/stocks");
+        if (!response.ok) {
+          throw new Error("Failed to fetch stocks");
+        }
+        const data = await response.json();
+        setAvailableStocks(data);
+      } catch (error) {
+        console.error("Error fetching stocks:", error);
+      }
+    };
+
+    fetchStocks();
+
     generatePrices();
   }, []);
 
-  const generateStockChartData = (ticker) => {
+  const generateStockChartData = (stockTicker) => {
     const stockData = [];
-    const prices = stockPrices[ticker] || [];
+    const prices = stockPrices[stockTicker] || [];
 
     for (let i = 0; i < prices.length; i++) {
       stockData.push([Date.now() - i * 1000, prices[i]]);
@@ -107,7 +120,7 @@ const StockMarket = () => {
   const addToCart = (stock) => {
     const stockWithPrice = {
       ...stock,
-      price: (generateFakeData()[stock.ticker]?.price || 0).toFixed(2), // Add price information formatted to 2 decimal places
+      price: (generateFakeData()[stock.stockTicker]?.price || 0).toFixed(2), // Add price information formatted to 2 decimal places
     };
     setSelectedStock(stockWithPrice);
     setOpenBuyDialog(true);
@@ -137,11 +150,11 @@ const StockMarket = () => {
       const volume = Math.floor(Math.random() * 1000) + 1;
       const marketCap = initialPrice * volume;
       const openingPrice = initialPrice;
-      const stockPrice = stockPrices[stock.ticker];
+      const stockPrice = stockPrices[stock.stockTicker];
       const high = stockPrice ? Math.max(...stockPrice).toFixed(2) : 0;
       const low = stockPrice ? Math.min(...stockPrice).toFixed(2) : 0;
 
-      fakeData[stock.ticker] = {
+      fakeData[stock.stockTicker] = {
         price: stockPrice ? stockPrice[0] : 0,
         volume,
         marketCap,
@@ -177,7 +190,7 @@ const StockMarket = () => {
         </Typography>
         <Grid container spacing={2}>
           {availableStocks.map((stock) => (
-            <Grid item xs={12} md={6} lg={4} key={stock.ticker}>
+            <Grid item xs={12} md={6} lg={4} key={stock.stockTicker}>
               <Box
                 boxShadow={1}
                 p={2}
@@ -185,17 +198,17 @@ const StockMarket = () => {
                 borderRadius={2}
               >
                 <Typography variant="h6" gutterBottom>
-                  {stock.name} ({stock.ticker})
+                  {stock.companyName} ({stock.stockTicker})
                 </Typography>
                 <Typography gutterBottom>
-                  Price: {generateFakeData()[stock.ticker]?.price}, Volume:{" "}
-                  {generateFakeData()[stock.ticker]?.volume}, Market Cap:{" "}
-                  {generateFakeData()[stock.ticker]?.marketCap}
+                  Price: {generateFakeData()[stock.stockTicker]?.price}, Volume:{" "}
+                  {generateFakeData()[stock.stockTicker]?.volume}, Market Cap:{" "}
+                  {generateFakeData()[stock.stockTicker]?.marketCap}
                 </Typography>
                 <Typography gutterBottom>
-                  Open: {generateFakeData()[stock.ticker]?.openingPrice}, High:{" "}
-                  {generateFakeData()[stock.ticker]?.high}, Low:{" "}
-                  {generateFakeData()[stock.ticker]?.low}
+                  Open: {generateFakeData()[stock.stockTicker]?.openingPrice},
+                  High: {generateFakeData()[stock.stockTicker]?.high}, Low:{" "}
+                  {generateFakeData()[stock.stockTicker]?.low}
                 </Typography>
                 <Button
                   variant="contained"
@@ -205,16 +218,16 @@ const StockMarket = () => {
                   Add to Cart
                 </Button>
                 <HighchartsReact
-                  key={stock.ticker}
+                  key={stock.stockTicker}
                   highcharts={Highcharts}
                   options={{
                     title: {
-                      text: `${stock.name} (${stock.ticker}) Stock Price`,
+                      text: `${stock.companyName} (${stock.stockTicker}) Stock Price`,
                     },
                     series: [
                       {
-                        name: "Stock Price",
-                        data: generateStockChartData(stock.ticker),
+                        companyName: "Stock Price",
+                        data: generateStockChartData(stock.stockTicker),
                       },
                     ],
                   }}

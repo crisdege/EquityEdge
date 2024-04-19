@@ -1,13 +1,12 @@
 const express = require("express");
-const { db } = require("./eedb.js"); 
-const jwt = require("jsonwebtoken");
+const { db } = require("./eedb.js");
 const {
   registerUser,
   getAllUsers,
   checkPassword,
   loginUser,
 } = require("./userController");
-const { getAllStocks, addStock } = require("./stockController"); 
+const { getAllStocks, addStock } = require("./stockController");
 
 const app = express();
 
@@ -49,30 +48,11 @@ app.get("/api/users", getAllUsers);
 
 app.post("/api/user/checkpassword", checkPassword);
 
-app.post("/api/user/login", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
+app.post("/api/user/login", loginUser);
 
-    if (!user || user.password !== password) {
-      return res.status(401).json({ error: "Invalid username or password" });
-    }
+app.post("/api/stocks", addStock);
 
-    const token = jwt.sign(
-      { userId: user._id, username: user.username },
-      "your_secret_key"
-    );
-
-    res.json({ token, user });
-  } catch (error) {
-    console.error("Error logging in:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-app.post("/api/stocks", addStock)
-
-app.get("/api/stocks", getAllStocks); 
+app.get("/api/stocks", getAllStocks);
 
 const PORT = process.env.PORT || 3001;
 

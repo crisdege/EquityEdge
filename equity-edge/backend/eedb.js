@@ -20,5 +20,5 @@ const Stock = mongoose.model("Stock", stockSchema);
 module.exports = {
   db,
   User,
-  Stock
+  Stock,
 };

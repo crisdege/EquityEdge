@@ -1,32 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 
 function StocksList() {
-  // Assuming stocks data is fetched from an API or passed as props
-  const stocks = [
-    {
-      id: 1,
-      companyName: "Company A",
-      stockTicker: "AAA",
-      volume: 1000,
-      initialPrice: 50,
-    },
-    {
-      id: 2,
-      companyName: "Company B",
-      stockTicker: "BBB",
-      volume: 2000,
-      initialPrice: 70,
-    },
-    {
-      id: 3,
-      companyName: "Company C",
-      stockTicker: "CCC",
-      volume: 1500,
-      initialPrice: 60,
-    },
-    // Add more stock data as needed
-  ];
+  const [stocks, setStocks] = useState([]);
+
+  useEffect(() => {
+    fetchStocks();
+  }, []);
+
+  const fetchStocks = async () => {
+    try {
+      const response = await fetch("/api/stocks");
+      if (!response.ok) {
+        throw new Error("Failed to fetch stocks");
+      }
+      const data = await response.json();
+      const stocksWithId = data.map((stock) => ({ ...stock, id: stock._id }));
+      setStocks(stocksWithId);
+    } catch (error) {
+      console.error("Error fetching stocks:", error);
+    }
+  };
 
   const columns = [
     {
@@ -42,7 +36,7 @@ function StocksList() {
       headerClassName: "custom-header",
     },
     {
-      field: "volume",
+      field: "sharesPurchased",
       headerName: "Volume",
       width: 150,
       headerClassName: "custom-header",

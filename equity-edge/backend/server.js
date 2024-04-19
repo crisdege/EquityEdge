@@ -7,6 +7,7 @@ const {
   checkPassword,
   loginUser,
 } = require("./userController");
+const { getAllStocks, addStock } = require("./stockController");
 
 const app = express();
 
@@ -25,6 +26,10 @@ app.get("/api/user/:username", getUserByUsername);
 app.post("/api/user/checkpassword", checkPassword);
 
 app.post("/api/user/login", loginUser);
+
+app.post("/api/stocks", addStock);
+
+app.get("/api/stocks", getAllStocks);
 
 const PORT = process.env.PORT || 3001;
 

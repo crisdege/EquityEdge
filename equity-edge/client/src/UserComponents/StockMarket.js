@@ -20,13 +20,6 @@ import HighchartsReact from "highcharts-react-official";
 
 import CartDialog from "./CartDialog";
 
-const availableStocks = [
-  { ticker: "AAPL", name: "Apple Inc." },
-  { ticker: "MSFT", name: "Microsoft Corporation" },
-  { ticker: "GOOGL", name: "Alphabet Inc." },
-  // Add more stocks as needed
-];
-
 // Function to generate random stock prices
 const generateRandomStockPrice = (
   initialPrice,
@@ -70,6 +63,8 @@ const StockMarket = () => {
   const [availableStocks, setAvailableStocks] = useState([]);
 
   useEffect(() => {
+    console.log("inside use effect");
+    console.log("inside use effect");
     // Generate random prices for each stock
     const generatePrices = () => {
       const prices = {};
@@ -85,9 +80,14 @@ const StockMarket = () => {
           steps
         );
       });
+      console.log(prices);
       setStockPrices(prices);
     };
 
+    generatePrices();
+  }, [availableStocks]);
+
+  useEffect(() => {
     const fetchStocks = async () => {
       try {
         const response = await fetch("/api/stocks");
@@ -102,8 +102,6 @@ const StockMarket = () => {
     };
 
     fetchStocks();
-
-    generatePrices();
   }, []);
 
   const generateStockChartData = (stockTicker) => {

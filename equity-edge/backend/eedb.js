@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const userSchema = require("./schema/userSchema.js");
+const stockSchema = require("./schema/stockSchema.js");
 
 const mongoURI = "mongodb+srv://crisd:12345@equityedgedb.xmydyfo.mongodb.net/";
 
@@ -14,8 +15,10 @@ db.once("open", () => {
 });
 
 const User = mongoose.model("User", userSchema);
+const Stock = mongoose.model("Stock", stockSchema);
 
 module.exports = {
   db,
-  User
+  User,
+  Stock
 };

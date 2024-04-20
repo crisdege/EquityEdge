@@ -63,20 +63,20 @@ async function loginUser(req, res) {
   }
 }
 
-async function getUserByUsername(req, res) {
-  try {
-    const username = req.body;
+// async function getUserByUsername(req, res) {
+//   try {
+//     const username = req.body;
 
-    const user = await User.findOne({ username: username });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.json(user);
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-}
+//     const user = await User.findOne({ username: username });
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+//     res.json(user);
+//   } catch (error) {
+//     console.error("Error fetching user:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// }
 
 async function depositCash(req, res) {
   try {
@@ -126,64 +126,28 @@ async function withdrawCash(req, res) {
   }
 }
 
-// async function buyStocks(req, res) {
-//   try {
-//     const { username, stockTicker, sharesPurchased, initialPrice } = req.body;
+async function getCash(req, res) {
+  try {
+    const { username } = req.query;
+    console.log(req.query.username);
 
-//     // Find the user by their username
-//     const user = await User.findOne({ username: username });
-//     console.log(user);
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
+    // Find the user by their username
+    const user = await User.findOne({ username: username });
 
-//     // Calculate the total value of the transaction
-//     const totalValue = initialPrice * sharesPurchased;
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-//     // Check if the user has enough cash to buy the stocks
-//     if (user.portfolio.cash < totalValue) {
-//       return res.status(400).json({ error: "Insufficient funds" });
-//     }
+    // Get the cash balance from the user's portfolio
+    const cashBalance = user.portfolio.cash;
 
-//     // Find the stock by its ticker symbol
-//     const stock = await Stock.findOne({ stockTicker });
+    res.status(200).json({ cashBalance });
+  } catch (error) {
+    console.error("Error getting cash balance:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
 
-//     if (!stock) {
-//       return res.status(404).json({ error: "Stock not found" });
-//     }
-
-//     // Update the user's cash balance
-//     user.portfolio.cash -= totalValue;
-
-//     // Update the total amount of shares purchased by the user
-//     user.portfolio.totalSharesPurchased += sharesPurchased;
-
-//     // Save the updated user object
-//     await user.save();
-
-//     // Create a new stock purchase instance
-//     const newStockPurchase = new StockPurchase({
-//       user: user._id,
-//       stock: stock._id,
-//       sharesPurchased,
-//       initialPrice,
-//     });
-
-//     // Save the new stock purchase
-//     await newStockPurchase.save();
-
-//     // Push the ID of the new stock purchase into the user's stocks array
-//     user.portfolio.stocks.push(newStockPurchase._id);
-
-//     // Save the user object again to update the stocks array
-//     await user.save();
-
-//     res.status(200).json({ message: "Stocks purchased successfully" });
-//   } catch (error) {
-//     console.error("Error buying stocks:", error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// }
 async function buyStocks(req, res) {
   try {
     const data = req.body; // Assuming req.body is an array of objects
@@ -322,7 +286,7 @@ async function getUserStocks(req, res) {
 module.exports = {
   registerUser,
   getAllUsers,
-  getUserByUsername,
+  // getUserByUsername,
   checkPassword,
   loginUser,
   depositCash,
@@ -330,4 +294,5 @@ module.exports = {
   buyStocks,
   sellStocks,
   getUserStocks,
+  getCash,
 };

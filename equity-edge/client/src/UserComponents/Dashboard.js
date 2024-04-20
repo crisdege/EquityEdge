@@ -63,7 +63,7 @@ const Dashboard = ({ userID, userFullName, username, cashBalance }) => {
     };
 
     fetchOwnedStocks();
-  }, [userID]);
+  }, [userID, selectedTab]);
 
   const handleChangeTab = (event, newValue) => {
     setSelectedTab(newValue);
@@ -103,7 +103,7 @@ const Dashboard = ({ userID, userFullName, username, cashBalance }) => {
           )}{" "}
           {/* Render StockMarket component when "Trade Stocks" tab is selected */}
           {selectedTab === 2 && (
-            <CashManagement cashBalance={cashBalance} />
+            <CashManagement cashBalance={cashBalance} username={username} />
             // <div>
             //   <Typography variant="h6" gutterBottom>
             //     Cash Balance

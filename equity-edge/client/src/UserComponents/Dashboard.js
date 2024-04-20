@@ -93,7 +93,9 @@ const Dashboard = ({ userID, userFullName, username, cashBalance }) => {
           </Tabs>
         </Box>
         <div style={{ padding: "16px" }}>
-          {selectedTab === 0 && <Portfolio ownedStocks={portfolio} />}
+          {selectedTab === 0 && (
+            <Portfolio ownedStocks={portfolio} username={username} />
+          )}
           {selectedTab === 1 && (
             <StockMarket
               ownedStocks={portfolio}

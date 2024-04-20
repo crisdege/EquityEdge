@@ -37,4 +37,19 @@ async function getStockByTicker(req, res) {
   }
 }
 
-module.exports = { addStock, getAllStocks, getStockByTicker };
+async function getStockByID(req, res) {
+  try {
+    const stockID = req.params.stock; // Assuming the stock ID is passed as a parameter
+    const stock = await Stock.findById(stockID); // Assuming Stock is the model representing stocks in your database
+
+    if (!stock) {
+      return res.status(404).json({ error: "Stock not found" });
+    }
+
+    res.json(stock);
+  } catch (error) {
+    console.error("Error fetching stock:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+module.exports = { addStock, getAllStocks, getStockByTicker, getStockByID };

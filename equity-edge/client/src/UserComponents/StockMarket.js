@@ -53,7 +53,7 @@ const generateRandomStockPrice = (
   return priceHistory;
 };
 
-const StockMarket = () => {
+const StockMarket = ({ userID, username }) => {
   const [cartItems, setCartItems] = useState([]);
   const [openCartDialog, setOpenCartDialog] = useState(false);
   const [openBuyDialog, setOpenBuyDialog] = useState(false);
@@ -63,8 +63,6 @@ const StockMarket = () => {
   const [availableStocks, setAvailableStocks] = useState([]);
 
   useEffect(() => {
-    console.log("inside use effect");
-    console.log("inside use effect");
     // Generate random prices for each stock
     const generatePrices = () => {
       const prices = {};
@@ -80,7 +78,7 @@ const StockMarket = () => {
           steps
         );
       });
-      console.log(prices);
+
       setStockPrices(prices);
     };
 
@@ -241,6 +239,8 @@ const StockMarket = () => {
         cartItems={cartItems}
         removeFromCart={removeFromCart}
         clearCart={clearCart}
+        userID={userID}
+        username={username}
       />
       <Dialog
         open={openBuyDialog}

@@ -30,7 +30,7 @@ const App = () => {
     localStorage.removeItem("token"); // Or use sessionStorage if preferred
   };
 
-  console.log(userInfo.isAdmin);
+  console.log(userInfo);
 
   return (
     <Router>
@@ -48,11 +48,14 @@ const App = () => {
                 <AdminDashboard
                   userID={userInfo._id}
                   userFullName={userInfo.fullName}
+                  username={userInfo.username}
                 />
               ) : (
                 <Dashboard
                   userID={userInfo._id}
                   userFullName={userInfo.fullName}
+                  username={userInfo.username}
+                  cashBalance={userInfo.portfolio.cash}
                 />
               )
             ) : (

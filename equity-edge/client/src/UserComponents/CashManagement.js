@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   TextField,
@@ -18,34 +18,92 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   borderRadius: theme.spacing(1),
 }));
 
-const CashManagement = () => {
-  const [cashBalance, setCashBalance] = useState(10000); // Initial cash balance
-  const [transactionAmount, setTransactionAmount] = useState(0); // Amount for transaction (deposit or withdrawal)
+const CashManagement = ({ username }) => {
+  const [cashBalance, setCashBalance] = useState(0);
+  const [transactionAmount, setTransactionAmount] = useState(); // Amount for transaction (deposit or withdrawal)
   const [transferFrom, setTransferFrom] = useState(null); // Transfer from account
   const [transferTo, setTransferTo] = useState(null); // Transfer to account
+  const [selectedTab, setSelectedTab] = useState(0);
 
-  // TODO: Function was added
-  const handleTransfer = () => {
+  useEffect(() => {
+    // Fetch the cash balance from the database when the component mounts
+    const getCashBalance = async () => {
+      try {
+        const response = await fetch(`/api/user/get-cash?username=${username}`);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch cash balance");
+        }
+
+        const data = await response.json();
+        setCashBalance(data.cashBalance);
+      } catch (error) {
+        console.error("Error fetching cash balance:", error);
+        // Handle error
+      }
+    };
+
+    getCashBalance();
+  }, [selectedTab, username, transferFrom, transferTo]);
+
+  const handleTransfer = async () => {
     if (transactionAmount > 0 && transferFrom && transferTo) {
-      const updatedCashBalance = cashBalance - transactionAmount;
-      const newCashBalance = updatedCashBalance + transactionAmount;
-      
-      setCashBalance(newCashBalance);
-      setTransactionAmount(0);
-      setTransferFrom(null);
-      setTransferTo(null);
-      console.log("Transfer initiated");
+      try {
+        if (transferFrom === "Checking" && transferTo === "Cash Balance") {
+          const response = await fetch("/api/user/deposit-cash", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username,
+              amount: transactionAmount,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error("Failed to deposit cash");
+          }
+        } else if (
+          transferFrom === "Cash Balance" &&
+          transferTo === "Checking"
+        ) {
+          const response = await fetch("/api/user/withdraw-cash", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username,
+              amount: transactionAmount,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error("Failed to withdraw cash");
+          }
+        }
+
+        // Update UI or any other necessary actions after successful transfer
+        setTransactionAmount(0);
+        setTransferFrom(null);
+        setTransferTo(null);
+        console.log("Transfer initiated");
+      } catch (error) {
+        console.error("Transfer error:", error);
+        // Handle error
+      }
     }
   };
 
   return (
     <StyledPaper>
-      <Typography variant="h4" gutterBottom>
-        Cash Management
-      </Typography>
       <Typography variant="h6" gutterBottom>
-        Current Cash Balance: ${cashBalance}
+        Current Cash Balance: $
+        {cashBalance.toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}
       </Typography>
+
       <Box my={2}>
         {" "}
         {/* Add space above and below Transfer Funds */}

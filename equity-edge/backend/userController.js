@@ -134,8 +134,8 @@ async function buyStocks(req, res) {
     const { username, stockTicker, sharesPurchased, initialPrice } = req.body;
 
     // Find the user by their username
-    const user = await User.findOne({ username });
-
+    const user = await User.findOne({ username: username });
+    console.log(user);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -193,7 +193,7 @@ async function sellStocks(req, res) {
     const { username, stockTicker, sharesToSell } = req.body;
 
     // Find the user by their username
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username: username });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -242,10 +242,10 @@ async function sellStocks(req, res) {
 }
 async function getUserStocks(req, res) {
   try {
-    const { userId } = req.params;
-
+    const userId = req.params;
+    console.log("userID*************", userId.userId);
     // Find the user by their ID
-    const user = await User.findById(userId);
+    const user = await User.findById(userId.userId);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });

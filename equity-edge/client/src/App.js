@@ -48,11 +48,14 @@ const App = () => {
                 <AdminDashboard
                   userID={userInfo._id}
                   userFullName={userInfo.fullName}
+                  username={userInfo.username}
                 />
               ) : (
                 <Dashboard
                   userID={userInfo._id}
                   userFullName={userInfo.fullName}
+                  username={userInfo.username}
+                  cashBalance={userInfo.portfolio.cash}
                 />
               )
             ) : (

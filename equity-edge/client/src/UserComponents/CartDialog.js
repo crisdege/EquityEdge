@@ -16,10 +16,11 @@ const CartDialog = ({
   handleClose,
   cartItems,
   removeFromCart,
-  userId,
+  userID,
+  username,
 }) => {
   // Calculate the total price for each item and the grand total
-  console.log(cartItems);
+  console.log("cartDialog username", username);
   const calculateTotalPrice = () => {
     let grandTotal = 0;
     const itemsWithTotalPrice = cartItems.map((item) => {
@@ -30,15 +31,55 @@ const CartDialog = ({
     return { itemsWithTotalPrice, grandTotal };
   };
 
+  // const handleBuy = async () => {
+  //   try {
+  //     // Assuming you have an API endpoint to handle the buy action
+  //     const response = await fetch("/api/user/buy-stocks", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(cartItems, username), // Send the cart items to the server
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to process purchase");
+  //     }
+
+  //     // If purchase is successful, clear the cart
+  //     removeFromCart();
+
+  //     // Close the dialog
+  //     handleClose();
+  //   } catch (error) {
+  //     console.error("Error buying stocks:", error);
+  //     // Handle error
+  //   }
+  // };
   const handleBuy = async () => {
     try {
+      // Map cartItems to match backend's expectations
+      // Format cart items
+      const formattedCartItems = cartItems.map(
+        ({ companyName, stockTicker, quantity, price }) => ({
+          stockTicker,
+          sharesPurchased: parseInt(quantity), // Convert quantity to a number if necessary
+          initialPrice: parseFloat(price), // Convert price to a number if necessary
+        })
+      );
+
+      // Add the username to each formatted item
+      formattedCartItems.forEach((item) => {
+        item.username = username;
+      });
+
       // Assuming you have an API endpoint to handle the buy action
       const response = await fetch("/api/user/buy-stocks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(cartItems, userId), // Send the cart items to the server
+        body: JSON.stringify(formattedCartItems), // Send the formatted cart items to the server
       });
 
       if (!response.ok) {
@@ -55,7 +96,6 @@ const CartDialog = ({
       // Handle error
     }
   };
-
   const { itemsWithTotalPrice, grandTotal } = calculateTotalPrice();
 
   return (
@@ -66,7 +106,7 @@ const CartDialog = ({
           {itemsWithTotalPrice.map((cartItem, index) => (
             <ListItem key={index} divider>
               <ListItemText
-                primary={`${cartItem.name} (${cartItem.ticker})`}
+                primary={`${cartItem.companyName} (${cartItem.stockTicker})`}
                 secondary={
                   <>
                     <Typography variant="body2">

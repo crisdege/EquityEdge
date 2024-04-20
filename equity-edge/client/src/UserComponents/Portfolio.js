@@ -29,7 +29,6 @@ const PortfolioPage = ({ ownedStocks, sellStock }) => {
     setSellQuantity({ ...sellQuantity, [symbol]: parseInt(value) || 0 });
   };
 
-  // TODO: Sean function to sell stock will go here
   const handleSell = (ticker) => {
     setSelectedStock(ticker);
     setConfirmationDialogOpen(true);

@@ -18,24 +18,22 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   borderRadius: theme.spacing(1),
 }));
 
-const CashManagement = () => {
-  const [cashBalance, setCashBalance] = useState(10000); // Initial cash balance
+const CashManagement = ({ cashBalance }) => {
   const [transactionAmount, setTransactionAmount] = useState(0); // Amount for transaction (deposit or withdrawal)
   const [transferFrom, setTransferFrom] = useState(null); // Transfer from account
   const [transferTo, setTransferTo] = useState(null); // Transfer to account
 
   // TODO: Function was added
   const handleTransfer = () => {
-    if (transactionAmount > 0 && transferFrom && transferTo) {
-      const updatedCashBalance = cashBalance - transactionAmount;
-      const newCashBalance = updatedCashBalance + transactionAmount;
-      
-      setCashBalance(newCashBalance);
-      setTransactionAmount(0);
-      setTransferFrom(null);
-      setTransferTo(null);
-      console.log("Transfer initiated");
-    }
+    // if (transactionAmount > 0 && transferFrom && transferTo) {
+    //   const updatedCashBalance = cashBalance - transactionAmount;
+    //   const newCashBalance = updatedCashBalance + transactionAmount;
+    //   setCashBalance(newCashBalance);
+    //   setTransactionAmount(0);
+    //   setTransferFrom(null);
+    //   setTransferTo(null);
+    //   console.log("Transfer initiated");
+    // }
   };
 
   return (

@@ -4,7 +4,6 @@ const StockPurchase = require("./schema/stockPuchaseSchema.js");
 
 async function registerUser(req, res) {
   try {
-    console.log("Request Body:", req.body);
     const newUser = new User(req.body);
     const savedUser = await newUser.save();
 
@@ -48,8 +47,6 @@ async function loginUser(req, res) {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
 
-    console.log("user", user);
-
     if (!user || user.password !== password) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
@@ -69,7 +66,7 @@ async function loginUser(req, res) {
 async function getUserByUsername(req, res) {
   try {
     const username = req.body;
-    console.log("username", username);
+
     const user = await User.findOne({ username: username });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -129,57 +126,119 @@ async function withdrawCash(req, res) {
   }
 }
 
+// async function buyStocks(req, res) {
+//   try {
+//     const { username, stockTicker, sharesPurchased, initialPrice } = req.body;
+
+//     // Find the user by their username
+//     const user = await User.findOne({ username: username });
+//     console.log(user);
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+
+//     // Calculate the total value of the transaction
+//     const totalValue = initialPrice * sharesPurchased;
+
+//     // Check if the user has enough cash to buy the stocks
+//     if (user.portfolio.cash < totalValue) {
+//       return res.status(400).json({ error: "Insufficient funds" });
+//     }
+
+//     // Find the stock by its ticker symbol
+//     const stock = await Stock.findOne({ stockTicker });
+
+//     if (!stock) {
+//       return res.status(404).json({ error: "Stock not found" });
+//     }
+
+//     // Update the user's cash balance
+//     user.portfolio.cash -= totalValue;
+
+//     // Update the total amount of shares purchased by the user
+//     user.portfolio.totalSharesPurchased += sharesPurchased;
+
+//     // Save the updated user object
+//     await user.save();
+
+//     // Create a new stock purchase instance
+//     const newStockPurchase = new StockPurchase({
+//       user: user._id,
+//       stock: stock._id,
+//       sharesPurchased,
+//       initialPrice,
+//     });
+
+//     // Save the new stock purchase
+//     await newStockPurchase.save();
+
+//     // Push the ID of the new stock purchase into the user's stocks array
+//     user.portfolio.stocks.push(newStockPurchase._id);
+
+//     // Save the user object again to update the stocks array
+//     await user.save();
+
+//     res.status(200).json({ message: "Stocks purchased successfully" });
+//   } catch (error) {
+//     console.error("Error buying stocks:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// }
 async function buyStocks(req, res) {
   try {
-    const { username, stockTicker, sharesPurchased, initialPrice } = req.body;
+    const data = req.body; // Assuming req.body is an array of objects
+    console.log(data);
+    for (const item of data) {
+      const { username, stockTicker, sharesPurchased, initialPrice } = item;
 
-    // Find the user by their username
-    const user = await User.findOne({ username: username });
-    console.log(user);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      // Find the user by their username
+      const user = await User.findOne({ username: username });
+      console.log(user);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Calculate the total value of the transaction
+      const totalValue = initialPrice * sharesPurchased;
+
+      // Check if the user has enough cash to buy the stocks
+      if (user.portfolio.cash < totalValue) {
+        return res.status(400).json({ error: "Insufficient funds" });
+      }
+
+      // Find the stock by its ticker symbol
+      const stock = await Stock.findOne({ stockTicker });
+
+      if (!stock) {
+        return res.status(404).json({ error: "Stock not found" });
+      }
+
+      // Update the user's cash balance
+      user.portfolio.cash -= totalValue;
+
+      // Update the total amount of shares purchased by the user
+      user.portfolio.totalSharesPurchased += sharesPurchased;
+
+      // Save the updated user object
+      await user.save();
+
+      // Create a new stock purchase instance
+      const newStockPurchase = new StockPurchase({
+        user: user._id,
+        stock: stock._id,
+        sharesPurchased,
+        initialPrice,
+      });
+
+      // Save the new stock purchase
+      await newStockPurchase.save();
+
+      // Push the ID of the new stock purchase into the user's stocks array
+      user.portfolio.stocks.push(newStockPurchase._id);
+
+      // Save the user object again to update the stocks array
+      await user.save();
     }
-
-    // Calculate the total value of the transaction
-    const totalValue = initialPrice * sharesPurchased;
-
-    // Check if the user has enough cash to buy the stocks
-    if (user.portfolio.cash < totalValue) {
-      return res.status(400).json({ error: "Insufficient funds" });
-    }
-
-    // Find the stock by its ticker symbol
-    const stock = await Stock.findOne({ stockTicker });
-
-    if (!stock) {
-      return res.status(404).json({ error: "Stock not found" });
-    }
-
-    // Update the user's cash balance
-    user.portfolio.cash -= totalValue;
-
-    // Update the total amount of shares purchased by the user
-    user.portfolio.totalSharesPurchased += sharesPurchased;
-
-    // Save the updated user object
-    await user.save();
-
-    // Create a new stock purchase instance
-    const newStockPurchase = new StockPurchase({
-      user: user._id,
-      stock: stock._id,
-      sharesPurchased,
-      initialPrice,
-    });
-
-    // Save the new stock purchase
-    await newStockPurchase.save();
-
-    // Push the ID of the new stock purchase into the user's stocks array
-    user.portfolio.stocks.push(newStockPurchase._id);
-
-    // Save the user object again to update the stocks array
-    await user.save();
 
     res.status(200).json({ message: "Stocks purchased successfully" });
   } catch (error) {
@@ -243,7 +302,7 @@ async function sellStocks(req, res) {
 async function getUserStocks(req, res) {
   try {
     const userId = req.params;
-    console.log("userID*************", userId.userId);
+
     // Find the user by their ID
     const user = await User.findById(userId.userId);
 

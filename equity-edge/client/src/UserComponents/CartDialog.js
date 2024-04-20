@@ -59,19 +59,14 @@ const CartDialog = ({
   const handleBuy = async () => {
     try {
       // Map cartItems to match backend's expectations
-      // Format cart items
       const formattedCartItems = cartItems.map(
         ({ companyName, stockTicker, quantity, price }) => ({
+          username, // Assuming username is a string, you can directly use it here
           stockTicker,
           sharesPurchased: parseInt(quantity), // Convert quantity to a number if necessary
           initialPrice: parseFloat(price), // Convert price to a number if necessary
         })
       );
-
-      // Add the username to each formatted item
-      formattedCartItems.forEach((item) => {
-        item.username = username;
-      });
 
       // Assuming you have an API endpoint to handle the buy action
       const response = await fetch("/api/user/buy-stocks", {

@@ -11,7 +11,13 @@ import {
   Typography,
 } from "@mui/material";
 
-const CartDialog = ({ open, handleClose, cartItems, removeFromCart }) => {
+const CartDialog = ({
+  open,
+  handleClose,
+  cartItems,
+  removeFromCart,
+  userId,
+}) => {
   // Calculate the total price for each item and the grand total
   console.log(cartItems);
   const calculateTotalPrice = () => {
@@ -24,8 +30,30 @@ const CartDialog = ({ open, handleClose, cartItems, removeFromCart }) => {
     return { itemsWithTotalPrice, grandTotal };
   };
 
-  const handleBuy = () => {
-    // TODO: Sean this is where the code to add the stocks to the database will go
+  const handleBuy = async () => {
+    try {
+      // Assuming you have an API endpoint to handle the buy action
+      const response = await fetch("/api/user/buy-stocks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cartItems, userId), // Send the cart items to the server
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to process purchase");
+      }
+
+      // If purchase is successful, clear the cart
+      removeFromCart();
+
+      // Close the dialog
+      handleClose();
+    } catch (error) {
+      console.error("Error buying stocks:", error);
+      // Handle error
+    }
   };
 
   const { itemsWithTotalPrice, grandTotal } = calculateTotalPrice();

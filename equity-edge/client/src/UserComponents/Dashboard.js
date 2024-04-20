@@ -165,7 +165,20 @@ const Dashboard = ({ userId, userFullName }) => {
   useEffect(() => {
     // Simulated data for stocks
 
-    setOwnedStocks(fakeStocks);
+    const fetchOwnedStocks = async () => {
+      try {
+        const response = await fetch(`/api/user/${userId}/stocks`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch owned stocks");
+        }
+        const data = await response.json();
+        setOwnedStocks(data.ownedStocks);
+      } catch (error) {
+        console.error("Error fetching owned stocks:", error);
+      }
+    };
+
+    fetchOwnedStocks();
 
     // Simulated data for transaction history
     const fakeTransactions = [
@@ -209,7 +222,11 @@ const Dashboard = ({ userId, userFullName }) => {
         <div style={{ padding: "16px" }}>
           {selectedTab === 0 && <Portfolio ownedStocks={fakeStocks} />}
           {selectedTab === 1 && (
-            <StockMarket ownedStocks={ownedStocks} sellStock={sellStock} />
+            <StockMarket
+              ownedStocks={ownedStocks}
+              sellStock={sellStock}
+              userId={userId}
+            />
           )}{" "}
           {/* Render StockMarket component when "Trade Stocks" tab is selected */}
           {selectedTab === 2 && (

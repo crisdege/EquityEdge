@@ -240,7 +240,26 @@ async function sellStocks(req, res) {
     res.status(500).json({ error: "Internal server error" });
   }
 }
+async function getUserStocks(req, res) {
+  try {
+    const { userId } = req.params;
 
+    // Find the user by their ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Retrieve the stocks owned by the user
+    const userStocks = await StockPurchase.find({ user: user._id });
+
+    res.status(200).json({ userStocks });
+  } catch (error) {
+    console.error("Error fetching user stocks:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
 module.exports = {
   registerUser,
   getAllUsers,
@@ -251,4 +270,5 @@ module.exports = {
   withdrawCash,
   buyStocks,
   sellStocks,
+  getUserStocks,
 };

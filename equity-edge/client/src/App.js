@@ -30,7 +30,7 @@ const App = () => {
     localStorage.removeItem("token"); // Or use sessionStorage if preferred
   };
 
-  console.log(userInfo.isAdmin);
+  console.log(userInfo);
 
   return (
     <Router>

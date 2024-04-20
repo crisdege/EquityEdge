@@ -10,6 +10,7 @@ const {
   withdrawCash,
   buyStocks,
   sellStocks,
+  getUserStocks,
 } = require("./userController");
 const { getAllStocks, addStock } = require("./stockController");
 
@@ -40,6 +41,8 @@ app.post("/api/user/withdraw-cash", withdrawCash);
 
 app.post("/api/user/buy-stocks", buyStocks);
 app.post("/api/user/sell-stocks", sellStocks);
+
+app.get("/api/user/:userId/stocks", getUserStocks);
 
 const PORT = process.env.PORT || 3001;
 

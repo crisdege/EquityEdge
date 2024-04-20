@@ -53,7 +53,7 @@ const generateRandomStockPrice = (
   return priceHistory;
 };
 
-const StockMarket = () => {
+const StockMarket = (userId) => {
   const [cartItems, setCartItems] = useState([]);
   const [openCartDialog, setOpenCartDialog] = useState(false);
   const [openBuyDialog, setOpenBuyDialog] = useState(false);
@@ -241,6 +241,7 @@ const StockMarket = () => {
         cartItems={cartItems}
         removeFromCart={removeFromCart}
         clearCart={clearCart}
+        uerId={userId}
       />
       <Dialog
         open={openBuyDialog}
